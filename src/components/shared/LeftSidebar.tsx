@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 import { Button } from '../ui/button'
 import { useSignOutAccount } from '@/lib/react-query/queriesAndMutations'
 import { useUserContext } from '@/context/AuthContext';
-import path from 'path';
 import { sidebarLinks } from '@/constants';
 import { INavLink } from '@/types';
 

@@ -1,13 +1,7 @@
 import { ID, Query } from "appwrite";
-
-import { appwriteConfig, account, databases, storage, avatars } from "./config";
+import { appwriteConfig, account, databases, storage, avatars } from './config';
 import { IUpdatePost, INewPost, INewUser, IUpdateUser } from "@/types";
 
-// ============================================================
-// AUTH
-// ============================================================
-
-// ============================== SIGN UP
 export async function createUserAccount(user: INewUser) {
     try {
         const newAccount = await account.create(
@@ -36,7 +30,6 @@ export async function createUserAccount(user: INewUser) {
     }
 }
 
-// ============================== SAVE USER TO DB
 export async function saveUserToDB(user: {
     accountId: string;
     email: string;
@@ -58,7 +51,6 @@ export async function saveUserToDB(user: {
     }
 }
 
-// ============================== SIGN IN
 export async function signInAccount(user: { email: string; password: string }) {
     try {
         const session = await account.createEmailSession(user.email, user.password);
@@ -69,7 +61,7 @@ export async function signInAccount(user: { email: string; password: string }) {
     }
 }
 
-// ============================== GET ACCOUNT
+
 export async function getAccount() {
     try {
         const currentAccount = await account.get();
@@ -80,7 +72,7 @@ export async function getAccount() {
     }
 }
 
-// ============================== GET USER
+
 export async function getCurrentUser() {
     try {
         const currentAccount = await getAccount();
@@ -102,7 +94,6 @@ export async function getCurrentUser() {
     }
 }
 
-// ============================== SIGN OUT
 export async function signOutAccount() {
     try {
         const session = await account.deleteSession("current");
@@ -113,11 +104,6 @@ export async function signOutAccount() {
     }
 }
 
-// ============================================================
-// POSTS
-// ============================================================
-
-// ============================== CREATE POST
 export async function createPost(post: INewPost) {
     try {
         // Upload file to appwrite storage
@@ -161,7 +147,6 @@ export async function createPost(post: INewPost) {
     }
 }
 
-// ============================== UPLOAD FILE
 export async function uploadFile(file: File) {
     try {
         const uploadedFile = await storage.createFile(
@@ -176,7 +161,6 @@ export async function uploadFile(file: File) {
     }
 }
 
-// ============================== GET FILE URL
 export function getFilePreview(fileId: string) {
     try {
         const fileUrl = storage.getFilePreview(
@@ -196,7 +180,6 @@ export function getFilePreview(fileId: string) {
     }
 }
 
-// ============================== DELETE FILE
 export async function deleteFile(fileId: string) {
     try {
         await storage.deleteFile(appwriteConfig.storageId, fileId);
@@ -207,7 +190,37 @@ export async function deleteFile(fileId: string) {
     }
 }
 
-// ============================== GET POSTS
+export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
+    const queries : any[] = [Query.orderDesc('$updatedAt'), Query.limit(10)]
+
+    if (pageParam) {
+        queries.push(Query.cursorAfter(pageParam.toString()));
+    }
+
+    try {
+        const posts = await databases.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.postCollectionId,
+            queries
+        )
+
+        if (!posts) throw new Error('Failed to fetch posts');
+
+        return {
+            documents: posts.documents, 
+            nextPageParam: posts.documents.length > 0 ? posts.documents[posts.documents.length - 1].$id : null
+        };
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+
+
+
+
+
 export async function searchPosts(searchTerm: string) {
     try {
         const posts = await databases.listDocuments(
@@ -224,29 +237,8 @@ export async function searchPosts(searchTerm: string) {
     }
 }
 
-export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
-    const queries: any[] = [Query.orderDesc("$updatedAt"), Query.limit(9)];
 
-    if (pageParam) {
-        queries.push(Query.cursorAfter(pageParam.toString()));
-    }
 
-    try {
-        const posts = await databases.listDocuments(
-            appwriteConfig.databaseId,
-            appwriteConfig.postCollectionId,
-            queries
-        );
-
-        if (!posts) throw Error;
-
-        return posts;
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-// ============================== GET POST BY ID
 export async function getPostById(postId?: string) {
     if (!postId) throw Error;
 
@@ -443,11 +435,6 @@ export async function getRecentPosts() {
     }
 }
 
-// ============================================================
-// USER
-// ============================================================
-
-// ============================== GET USERS
 export async function getUsers(limit?: number) {
     const queries: any[] = [Query.orderDesc("$createdAt")];
 
