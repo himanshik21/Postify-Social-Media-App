@@ -83,7 +83,7 @@ const SignupForm = () => {
           Create a new account
         </h2>
         <p className="text-light-3 small-medium md:base-regular mt-2">
-          To use Snapgram, please enter your details
+          To use Postify, please enter your details
         </p>
 
         <form
