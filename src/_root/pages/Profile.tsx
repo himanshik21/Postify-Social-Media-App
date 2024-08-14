@@ -12,11 +12,13 @@ import { useUserContext } from "@/context/AuthContext";
 import { GridPostList, Loader } from "@/components/shared";
 import { useGetUserById } from "@/lib/react-query/queriesAndMutations";
 
+
 interface StabBlockProps {
   value: string | number;
   label: string;
 }
 
+// StatBlock component displays a label and its associated value (e.g., number of posts, followers).
 const StatBlock = ({ value, label }: StabBlockProps) => (
   <div className="flex-center gap-2">
     <p className="small-semibold lg:body-bold text-primary-500">{value}</p>
@@ -40,6 +42,7 @@ const Profile = () => {
     <div className="profile-container">
       <div className="profile-inner_container">
         <div className="flex xl:flex-row flex-col max-xl:items-center flex-1 gap-7">
+          {/* Display the user's profile image or a placeholder if not available */}
           <img
             src={
               currentUser.imageUrl || "/assets/icons/profile-placeholder.svg"
@@ -47,6 +50,8 @@ const Profile = () => {
             alt="profile"
             className="w-28 h-28 lg:h-36 lg:w-36 rounded-full"
           />
+
+          {/* User's name, username, and bio */}
           <div className="flex flex-col flex-1 justify-between md:mt-2">
             <div className="flex flex-col w-full">
               <h1 className="text-center xl:text-left h3-bold md:h1-semibold w-full">
@@ -57,17 +62,20 @@ const Profile = () => {
               </p>
             </div>
 
+            {/* Display user's stats (posts, followers, following) */}
             <div className="flex gap-8 mt-10 items-center justify-center xl:justify-start flex-wrap z-20">
               <StatBlock value={currentUser.posts.length} label="Posts" />
               <StatBlock value={20} label="Followers" />
               <StatBlock value={20} label="Following" />
             </div>
 
+            {/* Display user's stats (posts, followers, following) */}
             <p className="small-medium md:base-medium text-center xl:text-left mt-7 max-w-screen-sm">
               {currentUser.bio}
             </p>
           </div>
 
+          {/* Edit Profile button for the current user and Follow button for other users */}
           <div className="flex justify-center gap-4">
             <div className={`${user.id !== currentUser.$id && "hidden"}`}>
               <Link
@@ -94,6 +102,7 @@ const Profile = () => {
         </div>
       </div>
 
+      {/* Display navigation tabs (Posts and Liked Posts) for the current user's profile */}
       {currentUser.$id === user.id && (
         <div className="flex max-w-5xl w-full">
           <Link
@@ -123,6 +132,7 @@ const Profile = () => {
         </div>
       )}
 
+      {/* Define routes for the profile page */}
       <Routes>
         <Route
           index

@@ -5,11 +5,12 @@ import { useGetUsers } from '../../lib/react-query/queriesAndMutations';
 const AllUsers = () => {
   const { toast } = useToast();
 
+  // Use custom hook to fetch users. This returns the data, loading state, and error state
   const { data: creators, isLoading, isError: isErrorCreators } = useGetUsers();
 
+  // If there's an error while fetching the users, show a toast notification and stop rendering
   if (isErrorCreators) {
     toast({ title: "Something went wrong." });
-
     return;
   }
   return (

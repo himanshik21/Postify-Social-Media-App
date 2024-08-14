@@ -8,14 +8,18 @@ import useDebounce from '@/hooks/useDebounce';
 
 const Explore = () => {
 
+  // useInView hook detects when an element is in the viewport
   const { ref, inView } = useInView();
+
+  // Fetch posts data and pagination control (fetchNextPage, hasNextPage) using a custom hook.
   const { data: posts, fetchNextPage, hasNextPage } = useGetPosts();
 
   const [searchValue, setSearchValue] = useState('');
   const debouncedValue = useDebounce(searchValue, 500);
   const { data: searchedPosts, isFetching: isSearchFetching } = useSearchPosts(debouncedValue)
 
-  // console.log(posts);
+  // useEffect hook triggers when the component is in view and there is no search value.
+  // If these conditions are met, it fetches the next page of posts.
   useEffect(()=>{
     if(inView && !searchValue) fetchNextPage();
   },[inView, searchValue])
@@ -74,6 +78,8 @@ const Explore = () => {
           )
         ))}
       </div>
+
+      {/* Infinite scroll loader that appears when there are more posts to load */}
       {hasNextPage && !searchValue && (
         <div ref={ref} className='mt-10'>
           <Loader />
