@@ -112,7 +112,8 @@ export async function createPost(post: INewPost) {
         if (!uploadedFile) throw Error;
 
         // Get file url
-        const fileUrl = getFilePreview(uploadedFile.$id);
+        // const fileUrl = getFilePreview(uploadedFile.$id);
+        const fileUrl = getFileView(uploadedFile.$id);
         if (!fileUrl) {
             await deleteFile(uploadedFile.$id);
             throw Error;
@@ -161,15 +162,30 @@ export async function uploadFile(file: File) {
     }
 }
 
-export function getFilePreview(fileId: string) {
+// export function getFilePreview(fileId: string) {
+//     try {
+//         const fileUrl = storage.getFilePreview(
+//             appwriteConfig.storageId,
+//             fileId,
+//             2000,
+//             2000,
+//             "top",
+//             100
+//         );
+
+//         if (!fileUrl) throw Error;
+
+//         return fileUrl;
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
+
+export function getFileView(fileId: string) {
     try {
-        const fileUrl = storage.getFilePreview(
+        const fileUrl = storage.getFileView(
             appwriteConfig.storageId,
-            fileId,
-            2000,
-            2000,
-            "top",
-            100
+            fileId
         );
 
         if (!fileUrl) throw Error;
@@ -179,6 +195,7 @@ export function getFilePreview(fileId: string) {
         console.log(error);
     }
 }
+
 
 export async function deleteFile(fileId: string) {
     try {
@@ -273,7 +290,8 @@ export async function updatePost(post: IUpdatePost) {
             if (!uploadedFile) throw Error;
 
             // Get new file url
-            const fileUrl = getFilePreview(uploadedFile.$id);
+            // const fileUrl = getFilePreview(uploadedFile.$id);
+            const fileUrl = getFileView(uploadedFile.$id);
             if (!fileUrl) {
                 await deleteFile(uploadedFile.$id);
                 throw Error;
@@ -489,7 +507,8 @@ export async function updateUser(user: IUpdateUser) {
             if (!uploadedFile) throw Error;
 
             // Get new file url
-            const fileUrl = getFilePreview(uploadedFile.$id);
+            // const fileUrl = getFilePreview(uploadedFile.$id);
+            const fileUrl = getFileView(uploadedFile.$id);
             if (!fileUrl) {
                 await deleteFile(uploadedFile.$id);
                 throw Error;
